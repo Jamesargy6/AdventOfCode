@@ -1,20 +1,16 @@
-import sys,operator, re
+import sys,operator, regex as re
 
 
 
 
 def hasABA(inputString, inBracket):
 	result = []
-	abas = []
-	groups = re.finditer(r'(\w)(\w)\1', inputString)
-	print([group.group(1) for group in groups])
-	print(abas)
-	if abas is not None:
-			for a in abas:
-				if a[0] != a[1]: 
-					result.append(a)
-
-	
+	groups = re.finditer(r'(\w)(\w)\1', inputString, overlapped=True)	
+	if groups is not None:
+			for g in groups:
+				if g[0][0] != g[0][1]:
+					result.append(g)
+	print(result)
 	return result
 
 
@@ -52,27 +48,30 @@ for d in directions:
 		bString = "".join(bSet)
 		aba = hasABA(bString, True)
 		if aba is not None:
-			abasInBracket.append(aba)
+			abasInBracket.extend(aba)
 			hasABAInBracket = True
 
 	for uSet in unbracketedSets:
 		uString = "".join(uSet)
 		aba = hasABA(uString, True)
 		if aba is not None:
-			abasOutsideOfBracket.append(aba)
+			abasOutsideOfBracket.extend(aba)
 			hasABAOutsideOfBracket = True
 
-	if(hasABAOutsideOfBracket and hasABAInBracket):
-		print("INSIDE")
-		print(*abasInBracket)
-		print("OUTSIDE")
-		print(*abasOutsideOfBracket)
+	print("ABAS Outside of bracket: ", [aba for aba in abasOutsideOfBracket])
+	print("ABAS Inside of bracket: ", [aba for aba in abasInBracket])
 
+	foundMatchingPair = False
+	if(hasABAOutsideOfBracket and hasABAInBracket):
 		for outAba in abasOutsideOfBracket:
 			for inAba in abasInBracket:
-				if outAba[0] == inAba[1] and outAba[1] == inAba[0]:
-					result +=1
-					print("Result Total: " + str(result))
+				if  not foundMatchingPair:
+					print("OUT ABA: ", outAba[0][0], outAba[0][1])
+					print("IN ABA: ", inAba[0][0], inAba[0][1])
+					if outAba[0][0] == inAba[0][1] and outAba[0][1] == inAba[0][0]:
+						result +=1
+						print("Result Total: " + str(result))
+						foundMatchingPair = True
 
 print("Result: " + str(result))
 
