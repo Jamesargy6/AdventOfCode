@@ -3,8 +3,8 @@ import sys
 
 file = open("day1input.txt", "r")
 captcha = file.read()
-captcha = captcha + captcha[0]
-capLength = len(captcha)-1
+captcha = captcha
+capLength = len(captcha)
 halfwayIndexModifier = capLength/2
 print("Captcha: ", captcha)
 print("Captcha length: ", capLength)
@@ -15,7 +15,7 @@ result = 0
 currentDigit = -1
 compareDigit = -1
 
-for x in range(0,capLength):
+for x in range(0,int(halfwayIndexModifier)):
 	halfwayIndex = int((x+halfwayIndexModifier)%capLength)
 	currentDigit = captcha[x]
 	compareDigit = captcha[halfwayIndex]
@@ -25,4 +25,4 @@ for x in range(0,capLength):
 		print("Index ", x, ", Running Total: ", result)
 
 
-print("Result: ", result)
+print("Result: ", result*2)
