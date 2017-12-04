@@ -1,7 +1,7 @@
 import sys
 
 
-file = open("day1input.txt", "r")
+file = open("input/day1input.txt", "r")
 captcha = file.read()
 captcha = captcha
 capLength = len(captcha)

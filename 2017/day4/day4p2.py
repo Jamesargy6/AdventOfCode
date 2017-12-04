@@ -1,6 +1,6 @@
 import sys
 
-file = open("day4input.txt", "r")
+file = open("input/day4input.txt", "r")
 passphraseLines = file.read().split("\n")
 validPhrases = 0
 index = 0

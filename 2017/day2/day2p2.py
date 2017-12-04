@@ -1,6 +1,6 @@
 import sys, math
 
-file = open("day2input.txt", "r")
+file = open("input/day2input.txt", "r")
 checksumLines = file.read().split("\n")
 
 result = 0
