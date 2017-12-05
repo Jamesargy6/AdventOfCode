@@ -1,9 +1,7 @@
 import sys
 
-
-file = open("input/day1input.txt", "r")
+file = open("../inputs/day1input.txt", "r")
 captcha = file.read()
-captcha = captcha
 capLength = len(captcha)
 print("Captcha: ", captcha)
 print("Captcha length: ", capLength)
@@ -18,6 +16,5 @@ for x in range(0,capLength):
 		result += int(captcha[x])
 		print("Index ", index, ", Running Total: ", result)
 	index += 1
-
 
 print("Result: ", result)
