@@ -9,38 +9,29 @@ total = 0
 inGarbage = False
 skipNext = False
 
-
 for char in stream:
 
+	#control for handling cancelled characters
 	if skipNext:
 		skipNext = False
 		continue
-
-
 	if char == "!":
 		skipNext = True
 		continue
 
+	#if we're not in garbage, execute the group logic
 	if not inGarbage:
 		if char == "{":
 			groupScore += 1
-			continue
-
-		if char == "}":
+		elif char == "}":
 			total += groupScore
-			print("Group level {} added".format(groupScore))
 			groupScore -= 1
-			continue
+			
 
+	#handle entering and exiting garbage blocks
 	if char == "<":
 		inGarbage = True
-		continue
-
-	if char == ">":
+	elif char == ">":
 		inGarbage = False
 
 print(total)
-
-
-
-
