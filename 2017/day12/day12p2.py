@@ -27,10 +27,11 @@ for p in pMap:
 	pArray = []
 	pArray.append(p)
 	pArray = pArray + pMap[p]
-	print(pArray)
 	groups.append(pArray)
 
-for x in range(0,10):
+groupLen = -1
+while groupLen != len(groups):
+	groupLen = len(groups)
 	for g in groups:
 		for p in g:
 			for g2 in groups:
@@ -40,6 +41,4 @@ for x in range(0,10):
 					g = list(set(g + g2))
 
 					groups.append(g)
-
-
 print(len(groups))

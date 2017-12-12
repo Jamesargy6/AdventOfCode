@@ -21,14 +21,13 @@ for d in directions:
 		if v not in pMap[currentVal]:
 			pMap[currentVal].append(v)
 
-currentLength = pMap[0]
 
-for x in range(0,1000):
+currentLength = 0
+while currentLength != len(pMap[0]):
+	currentLength = len(pMap[0])
 	for p in pMap:
 		if p != 0:
 			if p in pMap[0]:
 				pMap[0] = list(set(pMap[0] + pMap[p]))
-	currentLength = len(pMap[0])
-
-print(pMap[0])
+print(len(pMap[0]))
 
