@@ -22,10 +22,10 @@ while cont:
 	seen = False
 	#for each layer, see if the scanner will be at index 0 after delay + y steps, where y is the location of the layer
 	for y in layers:
-		if not seen:
-			if (delay + y)%(2*layers[y]-2) == 0:
-				delay += 1
-				seen = True
+		if (delay + y)%(2*layers[y]-2) == 0:
+			delay += 1
+			seen = True
+			break
 	cont = seen
 
 print(delay)
