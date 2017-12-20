@@ -1,6 +1,24 @@
 import sys, operator, functools, binascii
 
 grid = []
+result = 0
+
+def DFS(y, x):
+	grid[y][x] = "#"
+	if y > 0:
+		if grid[y-1][x] == "1":
+			DFS(y-1, x)
+	if x > 0:
+		if grid[y][x-1] == "1":
+			DFS(y, x-1)
+	if y < len(grid)-1:
+		if grid[y+1][x] == "1":
+			DFS(y+1, x)
+	if x < len(grid[0])-1:
+		if grid[y][x+1] == "1":
+			DFS(y, x+1)
+
+
 for h in range(0,128):
 
 	inputString = 'wenycdww-' + str(h)
@@ -55,6 +73,18 @@ for h in range(0,128):
 	string = bin(int(hashResult, 16))[2:]
 	while len(string) < 128:
 		string = "0" + string
-	print(string)
-	grid.append(string)
+	#print(string)
+	grid.append(list(string))
+
+for y in range(0,len(grid)):
+	for x in range(0,len(grid[0])):
+		if grid[y][x] == "1":
+			result += 1
+			DFS(y, x)
+print(result)
+
+
+
+
+
 
