@@ -16,7 +16,7 @@ term1 = False
 
 result = 0
 
-def executeInstruction(bool, p, ss, ssOther, i, term, res):
+def executeInstruction(bool, p, ss, ssOther, i, wait, res):
 	d = directions[i]
 	#parse the instruction
 	dParts = d.split(" ")
@@ -34,7 +34,7 @@ def executeInstruction(bool, p, ss, ssOther, i, term, res):
 			amt = p[dParts[2]]
 
 
-	if reg not in p:
+	if reg not in p and reg is not "1":
 		p[reg] = 0
 
 	recoveredVal = 0
@@ -55,28 +55,25 @@ def executeInstruction(bool, p, ss, ssOther, i, term, res):
 		if len(ssOther) > 0:
 			p[reg] = ssOther[0]
 			ssOther = ssOther[1:]
+			wait = False
 		else:
-			term = True
-	elif ins == "jgz" and p[reg] > 0:
-		i += amt-1
+			wait = True
+	elif ins == "jgz":
+		if reg == "1" or p[reg] > 0:
+			i += amt-1
 
-	i += 1
-	return p, ss, ssOther, i, term, res
+	if not wait:
+		i += 1
+	return p, ss, ssOther, i, wait, res
 
 
 
 while result < 1000000:
-	if term0 or term1:
+	if term0 and term1:
 		print(result)
 		exit()
-	if not term0:
-		p0, p0ss, p1ss, i0, term0, result = executeInstruction(0, p0, p0ss, p1ss, i0, term0, result)
-		print(p0, p0ss, p1ss, i0, term0, result)
-	if not term1:
-		p1, p1ss, p0ss, i1, term1, result = executeInstruction(1, p1, p1ss, p0ss, i1, term1, result)
-		print(p1, p1ss, p0ss, i1, term1, result)
-
-	print()
+	p0, p0ss, p1ss, i0, term0, result = executeInstruction(0, p0, p0ss, p1ss, i0, term0, result)
+	p1, p1ss, p0ss, i1, term1, result = executeInstruction(1, p1, p1ss, p0ss, i1, term1, result)
 
 
 
