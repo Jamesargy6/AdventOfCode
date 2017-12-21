@@ -1,9 +1,12 @@
-import sys
+import sys, math
 
 
 file = open("../inputs/day21input.txt", "r")
 directions = file.read().split("\n")
 iterations = 0
+
+inputs = []
+outputs = []
 
 
 def printProgram(program):
@@ -52,7 +55,7 @@ def rotateConfig(program, modulo):
 	if modulo == 3:
 		rotated = [['X','X','X'],['X','X','X'],['X','X','X']]
 	elif modulo == 2:
-		rotated = [[],[]]
+		rotated = [['X','X'],['X','X']]
 
 	for x in range(0,modulo):
 		for y in range(0,modulo):
@@ -69,8 +72,8 @@ def getProgramConfigs(program):
 	currentConfig = program
 	for x in range(0,4):
 		configs.append(currentConfig)
-		configs.append(flipConfig(currentConfig, 2))
-		currentConfig = rotateConfig(currentConfig, 2)
+		configs.append(flipConfig(currentConfig, modulo))
+		currentConfig = rotateConfig(currentConfig, modulo)
 
 
 
@@ -79,31 +82,58 @@ def getProgramConfigs(program):
 	return configs
 
 
+for d in directions:
+	input, output = d.split(" => ")
+	inputLines = input.split("/")
+	inputProg = []
+	for line in inputLines:
+		inputProg.append(list(line))
+	inputs.append(inputProg)
+
+	outputLines = output.split("/")
+	outputProg = []
+	for line in outputLines:
+		outputProg.append(list(line))
+	outputs.append(outputProg)
 
 
 masterProgram = [['.','#','.'],
 				['.','.','#'],
 				['#','#','#']]
 
-print("Iter: ",iterations)
-printProgram(masterProgram)
 
 #for every iteration
 while iterations <= 5:
 	print("Iter: ",iterations)
+	printProgram(masterProgram)
+	newPieces = []
 	#get each program piece
 	programPieces = splitProgram(masterProgram)
+
 	#for each piece, calculate its potential configurations
 	for pPiece in programPieces:
 		pieceConfigs = getProgramConfigs(programPieces[pPiece])
-	#TODO1: parse directions somewhere up top
-	#TODO2: check each piece for it's appropriate direction
-	#TODO3: stitch the results of each direction together
 
+
+
+		for config in pieceConfigs:
+			if config in inputs:
+				newPieces.append(outputs[inputs.index(config)])
+	
+	#TODO stitch the pieces back together
+	stitchGridSize = int(math.sqrt(len(newPieces)))
+	newMaster = []
+	
+	currentMasterRow = 0
+	for x in range(len(newPieces)):
+		if newMaster == []:
+			newMaster = newPieces[x]
+		elif x%stitchGridSize != 0:
+			for l in newPieces[x]:
+				
 
 
 
 
 
 	iterations += 1
-	#printProgram(masterProgram)
