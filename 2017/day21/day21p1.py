@@ -16,7 +16,19 @@ def printProgram(program):
 def splitProgram(masterProgram):
 	programPieces ={}
 	programCount = 0
-	if len(masterProgram)%3 == 0:
+	if len(masterProgram)%2 == 0:
+		y = 0
+		while y < len(masterProgram):
+			x = 0
+			while x < len(masterProgram):
+				if programCount not in programPieces:
+					programPieces[programCount] = []
+				programPieces[programCount].append(masterProgram[y][x:x+2])
+				programPieces[programCount].append(masterProgram[y+1][x:x+2])
+				programCount += 1
+				x += 2
+			y += 2
+	elif len(masterProgram)%3 == 0:
 		y = 0
 		while y < len(masterProgram):
 			x = 0
@@ -26,19 +38,10 @@ def splitProgram(masterProgram):
 				programPieces[programCount].append(masterProgram[y][x:x+3])
 				programPieces[programCount].append(masterProgram[y+1][x:x+3])
 				programPieces[programCount].append(masterProgram[y+2][x:x+3])
+				programCount += 1
 				x += 3
 			y += 3
-	elif len(masterProgram)%2 == 0:
-		y = 0
-		while y < len(masterProgram):
-			x = 0
-			while x < len(masterProgram):
-				if programCount not in programPieces:
-					programPieces[programCount] = []
-				programPieces[programCount].append(masterProgram[y][x:x+2])
-				programPieces[programCount].append(masterProgram[y+1][x:x+2])
-				x += 2
-			y += 2
+	
 	return programPieces
 
 def flipConfig(program, modulo):
@@ -65,10 +68,10 @@ def rotateConfig(program, modulo):
 
 def getProgramConfigs(program):
 	configs = []
-	if len(masterProgram)%3 == 0:
-		modulo = 3
-	elif len(masterProgram)%2 == 0:
+	if len(masterProgram)%2 == 0:
 		modulo = 2
+	elif len(masterProgram)%3 == 0:
+		modulo = 3
 	currentConfig = program
 	for x in range(0,4):
 		configs.append(currentConfig)
@@ -103,9 +106,8 @@ masterProgram = [['.','#','.'],
 
 
 #for every iteration
-while iterations <= 5:
+while iterations < 5:
 	print("Iter: ",iterations)
-	printProgram(masterProgram)
 	newPieces = []
 	#get each program piece
 	programPieces = splitProgram(masterProgram)
@@ -113,27 +115,38 @@ while iterations <= 5:
 	#for each piece, calculate its potential configurations
 	for pPiece in programPieces:
 		pieceConfigs = getProgramConfigs(programPieces[pPiece])
-
-
-
+		foundConfig = False
 		for config in pieceConfigs:
-			if config in inputs:
+			if config in inputs and not foundConfig:
+				foundConfig = True
 				newPieces.append(outputs[inputs.index(config)])
-	
+
+
 	#TODO stitch the pieces back together
 	stitchGridSize = int(math.sqrt(len(newPieces)))
 	newMaster = []
+	for x in range(len(newPieces[0])*stitchGridSize):
+		newMaster.append(['X']*len(newPieces[0])*stitchGridSize)
 	
+
 	currentMasterRow = 0
+	currentMasterColumn = 0
 	for x in range(len(newPieces)):
-		if newMaster == []:
-			newMaster = newPieces[x]
-		elif x%stitchGridSize != 0:
-			for l in newPieces[x]:
-				
-
-
-
+		if x > 0 and x%stitchGridSize == 0:
+			currentMasterRow += 1
+			currentMasterColumn = 0
+		elif x > 0 and x%stitchGridSize != 0:
+			currentMasterColumn += 1
+		for y in range(len(newPieces[x])):
+			newMaster[currentMasterRow*len(newPieces[x]) + y][(currentMasterColumn*len(newPieces[x])):((currentMasterColumn+1)*len(newPieces[x]))] = newPieces[x][y]
+		
+	masterProgram = newMaster
+			
 
 
 	iterations += 1
+
+numberOn = 0
+for l in masterProgram:
+	numberOn += ''.join(l).count("#")
+print(numberOn)
