@@ -6,6 +6,7 @@ import (
 	. "./day3"
 	. "./day4"
 	. "./day5"
+	. "./day6"
 	"errors"
 	"os"
 	"strconv"
@@ -22,7 +23,8 @@ var solutions = [][]func(){
 	{Day2Part1, Day2Part2},
 	{Day3Part1, Day3Part2},
 	{Day4Part1, Day4Part2},
-	{Day5Part1, Day5Part2}}
+	{Day5Part1, Day5Part2},
+	{Day6Part1, Day6Part2}}
 
 // main is the entry point for running all AdventOfCode solutions. it expects two integer arguments to be bassed in,
 // representing the "day" and "part" of the solution we'd like to run.
