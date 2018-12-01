@@ -6,7 +6,7 @@ import (
 	"../utils"
 	"fmt"
 	"strconv"
-	"strings"
+	"strings" 
 )
 
 func Day1Part1() {
