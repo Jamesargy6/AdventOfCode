@@ -15,20 +15,18 @@ func Day2Part2() {
 	for _, line := range lines {
 		for _, line2 := range lines {
 			diff := 0
-			index := 0
+			diffIndex := 0
 			// compare each character against one another
-			for idx1, char1 := range line {
-				for idx2, char2 := range line2 {
-					// count the positional differences between the strings
-					if idx1 == idx2 && char1 != char2 {
-						diff++
-						index = idx1
-					}
+			for idx, _ := range line {
+				// count the positional differences between the strings
+				if line[idx] != line2[idx] {
+					diff++
+					diffIndex = idx
 				}
 			}
 			// if there wast only one difference, print the common letters between the strings
 			if diff == 1 {
-				fmt.Println(line[:index] + line[index+1:])
+				fmt.Println(line[:diffIndex] + line[diffIndex+1:])
 				return
 			}
 		}
