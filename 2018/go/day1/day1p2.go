@@ -18,10 +18,7 @@ func Day1Part2() {
 		for _, fq := range freqChanges {
 			var plusMinus = fq[0]
 			var amtStr = fq[1:]
-			amt, err := strconv.Atoi(amtStr)
-			if err != nil {
-				panic(err)
-			}
+			amt, _ := strconv.Atoi(amtStr)
 			if plusMinus == '+' {
 				result += amt
 			} else {
