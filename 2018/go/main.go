@@ -3,6 +3,10 @@ package main
 import (
 	. "./day1"
 	. "./day2"
+	. "./day4"
+	. "./day5"
+	. "./day6"
+	. "./day10"
 	"errors"
 	"os"
 	"strconv"
@@ -16,7 +20,15 @@ var WrongTypeOfArgs = errors.New("Program arguments invalid. Expecting integer a
 // we will use this list to quickly reference and run the correct solution based on the parameters passed into main
 var solutions = [][]func(){
 	{Day1Part1, Day1Part2},
-	{Day2Part1, Day2Part2}}
+	{Day2Part1, Day2Part2},
+	{}, // TODO Day 3
+	{Day4Part1, Day4Part2},
+	{Day5Part1, Day5Part2},
+	{Day6Part1, Day6Part2},
+	{}, // TODO Day 7
+	{}, // TODO Day 8
+	{}, // TODO Day 9
+	{Day10Part1, Day10Part2},}
 
 // main is the entry point for running all AdventOfCode solutions. it expects two integer arguments to be bassed in,
 // representing the "day" and "part" of the solution we'd like to run.

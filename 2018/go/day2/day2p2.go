@@ -24,7 +24,7 @@ func Day2Part2() {
 					diffIndex = idx
 				}
 			}
-			// if there wast only one difference, print the common letters between the strings
+			// if there was only one difference, print the common letters between the strings
 			if diff == 1 {
 				fmt.Println(line[:diffIndex] + line[diffIndex+1:])
 				return
