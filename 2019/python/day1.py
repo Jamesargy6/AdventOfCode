@@ -1,3 +1,5 @@
+from aoc_lib import file_utils
+
 def calculate_fuel(mass: int) -> int:
 	return (mass//3)-2
 
@@ -12,7 +14,7 @@ def calculate_total_fuel_for_module(mass: int) -> int:
 	return module_fuel + calculate_fuel_for_fuel(module_fuel)
 
 if __name__ == '__main__':
-    masses = [int(line.rstrip('\n')) for line in open('../inputs/day1input.txt')]
+    masses = file_utils.read_file_into_int_list('inputs/day1input.txt')
 
     total_module_fuel = sum(calculate_fuel(mass) for mass in masses)
     print(f'Part 1: {total_module_fuel}')
