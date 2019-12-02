@@ -16,8 +16,8 @@ def calculate_total_fuel_for_module(mass: int) -> int:
 if __name__ == '__main__':
     masses = file_utils.read_file_into_int_list('inputs/day1input.txt')
 
-    total_module_fuel = sum(calculate_fuel(mass) for mass in masses)
+    total_module_fuel = sum(map(calculate_fuel, masses))
     print(f'Part 1: {total_module_fuel}')
 
-    total_fuel = sum(calculate_total_fuel_for_module(mass) for mass in masses)
+    total_fuel = sum(map(calculate_total_fuel_for_module, masses))
     print(f'Part 2: {total_fuel}')
