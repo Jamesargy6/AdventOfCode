@@ -16,13 +16,14 @@ if __name__ == '__main__':
 	part_1_ins = get_instructions(original_instructions, 12, 2)
 	part_1_program = intcode.IntcodeProgram(part_1_ins)
 	part_1_program.run()
-	print(f'Part 1: {part_1_program.run()[0]}')
+	print(f'Part 1: {part_1_program.memory[0]}')
 
 	desired_result = 19690720
 	for noun in range(100):
 		for verb in range(100):
 			part_2_ins = get_instructions(original_instructions, noun, verb)
 			part_2_program = intcode.IntcodeProgram(part_2_ins)
-			result = part_2_program.run()[0]
-			if result == desired_result:
+			part_2_program.run()
+
+			if part_2_program.memory[0] == desired_result:
 				print(f'Part 2: {(noun*100)+verb}')
