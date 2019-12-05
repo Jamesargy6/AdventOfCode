@@ -27,3 +27,4 @@ if __name__ == '__main__':
 
 			if part_2_program.memory[0] == desired_result:
 				print(f'Part 2: {(noun*100)+verb}')
+				exit()
