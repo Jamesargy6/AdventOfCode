@@ -5,6 +5,10 @@ class ParseError(Exception):
 	pass
 
 
+def read_file_into_str(filename: str) -> List[str]:
+	return  open(filename).read()
+
+
 def read_file_into_str_list(filename: str) -> List[str]:
 	return [line.rstrip('\n') for line in open(filename)]
 
