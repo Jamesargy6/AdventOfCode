@@ -30,6 +30,7 @@ class IntcodeProgram:
 	HALT_OPCODE = 99
 	instruction_pointer: int
 	input_pointer: int
+	relative_base: int
 	memory: List[int]
 	inputs: List[int]
 	output: List[int]
@@ -46,19 +47,23 @@ class IntcodeProgram:
 			6: Instruction(6, [ParameterType.READ, ParameterType.JUMP], self._jif),
 			7: Instruction(7, [ParameterType.READ, ParameterType.READ, ParameterType.WRITE], self._lt),
 			8: Instruction(8, [ParameterType.READ, ParameterType.READ, ParameterType.WRITE], self._eq),
+			9: Instruction(9, [ParameterType.READ], self._rel),
 			99: Instruction(99, [], self._halt)
 		}
 		self.PARAM_MODES = {
-			0: lambda i: self.memory[i],
-			1: lambda i: i
+			0: lambda i: self._read_from_memory(i),
+			1: lambda i: i,
+			2: lambda i:self._read_from_memory(i+self.relative_base)
 		}
 
 		self.WRITE_MODES = {
-			0: self._write_to_memory
+			0: self._write_to_memory,
+			2: self._write_to_relative_memory
 		}
 
 		self.instruction_pointer = 0
 		self.input_pointer = 0
+		self.relative_base = 0
 
 		self.memory = memory
 		self.inputs = inputs
@@ -91,8 +96,8 @@ class IntcodeProgram:
 			param_index = self.instruction_pointer+1+i
 			param_type = ins.parameter_types[i]
 			if param_type == ParameterType.WRITE:
-					self.write = self.WRITE_MODES[pm]
-					parameters.append(self.memory[param_index])
+				self.write = self.WRITE_MODES[pm]
+				parameters.append(self.memory[param_index])
 			else:
 				parameters.append(self.PARAM_MODES[pm](self.memory[param_index]))
 		return (*parameters, )
@@ -140,8 +145,26 @@ class IntcodeProgram:
 		self.write(value, ipos)
 		self.instruction_pointer += 4
 
+	def _rel(self, ia: int):
+		self.relative_base += ia
+		self.instruction_pointer += 2
+
 	def _halt(self):
 		raise HaltException()
 
 	def _write_to_memory(self, value: int, index: int):
+		self._grow_memory(index)
 		self.memory[index] = value
+
+	def _write_to_relative_memory(self, value: int, index: int):
+		rel_index = index+self.relative_base
+		self._grow_memory(rel_index)
+		self.memory[rel_index] = value
+
+	def _read_from_memory(self, index: int):
+		self._grow_memory(index)
+		return self.memory[index]
+
+	def _grow_memory(self, index: int):
+		if index >= len(self.memory):
+			self.memory = self.memory + [0 for _ in range(index-len(self.memory)+1)]
