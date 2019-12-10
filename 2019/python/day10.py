@@ -6,7 +6,7 @@ from math import sqrt
 
 Coord = namedtuple('Coord', 'x y')
 
-SlopeDist = namedtuple('SlopeDist', 'coord slope distance')
+SlopeDist = namedtuple('SlopeDist', 'coord slope distance lr')
 
 if __name__ == '__main__':
 	input_lines = file_utils.read_file_into_str_list('inputs/day10input.txt')
@@ -25,44 +25,55 @@ if __name__ == '__main__':
 				continue
 			x_diff = other_ast.x - ast.x
 			y_diff = other_ast.y - ast.y
-			distance = sqrt((x_diff**2)*(y_diff**2))
+			distance = sqrt((x_diff**2)+(y_diff**2))
 			if x_diff != 0:
 				rise_run = y_diff / x_diff
 				x = str(rise_run)
 				if x_diff > 0:
-					x = 'L' + x
+					lr = '1R'
 				else: 
-					x = 'R' + x
-				if x not in asteroids[ast]:
-					asteroids[ast][x] = [SlopeDist(other_ast, rise_run, distance)]
+					lr = '3L'
+				if lr not in asteroids[ast]:
+					asteroids[ast][lr+x] = [SlopeDist(other_ast, rise_run, distance, lr)]
 				else:
-					asteroids[ast][x].append(SlopeDist(other_ast, rise_run, distance))
+					asteroids[ast][lr+x].append(SlopeDist(other_ast, rise_run, distance, lr))
 			else:
 				if y_diff > 0:
 					x = '+inf'
 					if x not in asteroids[ast]:
-						asteroids[ast][x] = [SlopeDist(other_ast, 1000, distance)]
+						asteroids[ast][x] = [SlopeDist(other_ast, 1000, distance, '0U')]
 					else:
-						asteroids[ast][x].append(SlopeDist(other_ast, 1000, distance))
+						asteroids[ast][x].append(SlopeDist(other_ast, 1000, distance, '0U'))
 				else:
 					x = '-inf'
 					if x not in asteroids[ast]:
-						asteroids[ast][x] = [SlopeDist(other_ast, -1000, distance)]
+						asteroids[ast][x] = [SlopeDist(other_ast, -1000, distance, '2D')]
 					else:
-						asteroids[ast][x].append(SlopeDist(other_ast, -1000, distance))
+						asteroids[ast][x].append(SlopeDist(other_ast, -1000, distance, '2D'))
 
 	asteroid_lens = {key:len(value) for (key, value) in asteroids.items()}
 	station = max(asteroid_lens.items(), key=operator.itemgetter(1))[0]
 	print(station, asteroid_lens[station])
 
-	station_can_see = {key:sorted(value, key = lambda value: value.distance) for (key, value) in asteroids[station].items()}
+	relative_to_station = []
+	for slope_dict in asteroids[station]:
+		relative_to_station.append(asteroids[station][slope_dict])
 
-	station_can_see = sorted(station_can_see.values(), key=lambda value: list(station_can_see.items())[0][1][0].slope)
-	print(station, station_can_see)
-	
-	#destroyed = 0:
-	
-	#while destroyed < 200:
+	relative_to_station = sorted(relative_to_station, key=lambda x: (x[0].lr, -x[0].slope, x[0].slope >= 0))
+	for x in relative_to_station:
+		x = sorted(x, key=lambda i: i.distance)
+
+	destroyed = 0
+	index = 0
+	for x in range(200):
+		print(relative_to_station[index])
+		if len(relative_to_station[index]) > 0:
+			gone = relative_to_station[index].pop()
+			print(f'destroyed {x+1}: {gone}')
+		index = (index+1)%len(relative_to_station)
+
+
+
 
 
 
