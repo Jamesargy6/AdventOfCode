@@ -30,7 +30,6 @@ def get_reaction(raw_reaction: str) -> Reaction:
 	result = Reactant(raw_result[1], int(raw_result[0]))
 	return Reaction(inputs, result)
 
-
 class Reactor:
 	reactor: List[Reaction]
 	chemicals_made: Dict[str, int]

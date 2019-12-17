@@ -1,5 +1,6 @@
 from typing import List, Callable, Tuple, Dict
 from dataclasses import dataclass
+from collections import defaultdict
 from enum import Enum, auto
 
 
@@ -40,7 +41,7 @@ class IntcodeProgram:
 	state: ProgramState
 	write: Callable
 
-	def __init__(self, program: List[int], inputs: List[int] = []):
+	def __init__(self, program: List[int], inputs: List[int] = None):
 		self.OP_CODES = {
 			1: Instruction(1, [ParameterType.READ, ParameterType.READ, ParameterType.WRITE], self._add),
 			2: Instruction(2, [ParameterType.READ, ParameterType.READ, ParameterType.WRITE], self._mul),
@@ -68,8 +69,8 @@ class IntcodeProgram:
 		self.input_pointer = 0
 		self.relative_base = 0
 
-		self.memory = dict(zip(range(len(program)), program))
-		self.inputs = inputs
+		self.memory = defaultdict(int, zip(range(len(program)), program))
+		self.inputs = inputs if inputs is not None else []
 		self.output = []
 		self.state = ProgramState.IDLE
 
@@ -84,6 +85,7 @@ class IntcodeProgram:
 			except HaltException:
 				self.state = ProgramState.HALTED
 			except InputException:
+				self.instruction_pointer -= 1 + len(parameters)
 				self.state = ProgramState.INPUT_WAIT
 
 	def prepare_instruction(self, ins_code: int) -> Tuple[int, List[int]]:
