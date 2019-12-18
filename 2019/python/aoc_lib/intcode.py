@@ -80,12 +80,12 @@ class IntcodeProgram:
 			instruction_code = self.memory[self.instruction_pointer]
 			instruction, parameters = self.prepare_instruction(instruction_code)
 			try:
-				self.instruction_pointer += 1 + len(parameters)
-				instruction.operation(*parameters)
+				advance_ins_pointer = instruction.operation(*parameters)
+				if advance_ins_pointer:
+					self.instruction_pointer += 1 + len(parameters)
 			except HaltException:
 				self.state = ProgramState.HALTED
 			except InputException:
-				self.instruction_pointer -= 1 + len(parameters)
 				self.state = ProgramState.INPUT_WAIT
 
 	def prepare_instruction(self, ins_code: int) -> Tuple[int, List[int]]:
@@ -110,38 +110,49 @@ class IntcodeProgram:
 
 	def _add(self, ia: int, ib: int, ipos: int):
 		self.write(ia + ib, ipos)
+		return True
 
 	def _mul(self, ia: int, ib: int, ipos: int):
 		self.write(ia * ib, ipos)
+		return True
 
 	def _in(self, i: int):
 		if len(self.inputs) > self.input_pointer:
 			self.write(self.inputs[self.input_pointer], i)
 			self.input_pointer += 1
+			return True
 		else:
 			raise InputException()
 
 	def _out(self, out: int):
 		self.output.append(out)
+		return True
 
 	def _jit(self, ia: int, j: int):
 		if ia > 0:
 			self.instruction_pointer = j
+			return False
+		return True
 
 	def _jif(self, ia: int, j: int):
 		if ia == 0:
 			self.instruction_pointer = j
+			return False
+		return True
 
 	def _lt(self, ia: int, ib: int, ipos: int):
 		value = 1 if ia < ib else 0
 		self.write(value, ipos)
+		return True
 
 	def _eq(self, ia: int, ib: int, ipos: int):
 		value = 1 if ia == ib else 0
 		self.write(value, ipos)
+		return True
 
 	def _rel(self, ia: int):
 		self.relative_base += ia
+		return True
 
 	def _halt(self):
 		raise HaltException()
